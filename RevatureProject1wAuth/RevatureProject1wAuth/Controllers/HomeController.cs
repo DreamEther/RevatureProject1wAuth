@@ -33,5 +33,15 @@ namespace RevatureProject1wAuth.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult NewCustomerCreated()
+        {
+            return View();
+        }
+
+        public IActionResult CreateAccount()
+        {
+            return View("CreateAccount");
+        }
     }
 }

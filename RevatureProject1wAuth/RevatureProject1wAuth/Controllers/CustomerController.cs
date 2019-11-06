@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using ModelClasses.Models;
-using RevatureProject1wAuth.Data;
 using ModelClasses.Models.Repositories;
 
 namespace RevatureProject1wAuth.Controllers
@@ -14,10 +12,11 @@ namespace RevatureProject1wAuth.Controllers
     public class CustomerController : Controller
     {
         private readonly CustomerRepo _repo;
-
+        public static List<Customer> customers = new List<Customer>();
         public CustomerController(CustomerRepo repo)
         {
             _repo = repo;
+      
         }
 
         // GET: Customer
@@ -26,44 +25,62 @@ namespace RevatureProject1wAuth.Controllers
             return View(await _repo.Get());
         }
 
-        //GET: Customer/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        // GET: Customer/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var customer = await _repo.Get(id);
-                
-            if (customer == null)
-            {
-                return NotFound();
-            }
+        //    var customer = await _repo.
+        //    if (customer == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(customer); // returning the view associated with customer
-        }
+        //    return View(customer);
+        //}
 
-       
+        // GET: Customer/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-       
+        // POST: Customer/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,FirstName,LastName,Pin")] Customer customer)
+        public async Task<IActionResult> Create([Bind("FirstName,LastName,Pin")] Customer customer)
         {
+            //if (customer.UserID == User.Identity.GetUserId())
+            //{
+            //    return RedirectToAction("Index", "Home");
+            //}
+
             if (ModelState.IsValid)
             {
-                await _repo.Create(customer);
-                return RedirectToAction(nameof(Index));
+                    var newCustomer = new Customer()
+                    {
+
+                        UserID = User.Identity.GetUserId(),
+                        FirstName = customer.FirstName,
+                        LastName = customer.LastName,
+                        Pin = customer.Pin
+                    };
+                   // customers.Add(newCustomer);
+
+                    await _repo.Create(newCustomer);
+                    return RedirectToAction("NewCustomerCreated", "Home");
+               
             }
             return View(customer);
         }
 
-        //// GET: Customer/Edit/5
+        // GET: Customer/Edit/5
         //public async Task<IActionResult> Edit(int? id)
         //{
         //    if (id == null)
@@ -71,7 +88,7 @@ namespace RevatureProject1wAuth.Controllers
         //        return NotFound();
         //    }
 
-        //    var customer = await _context.Customers.FindAsync(id);
+        //    var customer = await _repo.
         //    if (customer == null)
         //    {
         //        return NotFound();
@@ -132,7 +149,7 @@ namespace RevatureProject1wAuth.Controllers
         //    return View(customer);
         //}
 
-        // POST: Customer/Delete/5
+        //// POST: Customer/Delete/5
         //[HttpPost, ActionName("Delete")]
         //[ValidateAntiForgeryToken]
         //public async Task<IActionResult> DeleteConfirmed(int id)

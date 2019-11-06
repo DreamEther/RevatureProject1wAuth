@@ -7,6 +7,7 @@ namespace ModelClasses.Models
 {
     public class MyDbContext: DbContext
     {
+        
 
         public MyDbContext(DbContextOptions<MyDbContext> options)
            : base(options)
@@ -15,11 +16,14 @@ namespace ModelClasses.Models
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            base.OnConfiguring(optionsBuilder);
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(@"data source=.\SQLEXPRESS;initial catalog=MyDb;integrated security=True;MultipleActiveResultSets=True;");
             }
         }
     public DbSet<Customer> Customers { get; set; }
+
+    public DbSet<CheckingAccount> CheckingAccounts { get; set; }
     }
 }
