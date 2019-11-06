@@ -15,5 +15,18 @@ namespace ModelClasses.Models
         public DateTime DateTime { get; set; }
 
         public decimal Balance { get; set; }
+
+        public Transaction() //why do i need this???
+        {
+
+        }
+        public Transaction(int id, decimal balance, decimal transactionAmount, DateTime dateTime)
+        {
+            AccountID = id;
+            Balance = balance;
+            TransactionAmount = transactionAmount;
+            DateTime = dateTime;
+        }
+
     }
 }

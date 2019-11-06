@@ -40,7 +40,8 @@
                     </td>
                     <td>
                         <a asp-action="Deposit" asp-route-id="@item.ID">Make a Deposit</a> |
-                        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                        <a asp-action="Withdraw" asp-route-id="@item.ID">Make a Withdrawal</a> |
+                        <a asp-action="ListOfTransactions" asp-route-id="@item.ID">List of Transactions</a> |
                         <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
                     </td>
                 </tr>

@@ -10,8 +10,8 @@ using ModelClasses.Models;
 namespace ModelClasses.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20191105020639_cust")]
-    partial class cust
+    [Migration("20191106052539_transactions")]
+    partial class transactions
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace ModelClasses.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("ModelClasses.Models.CheckingAccount", b =>
+            modelBuilder.Entity("ModelClasses.Models.Account", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -40,6 +40,10 @@ namespace ModelClasses.Migrations
                     b.Property<int?>("CustomerID1")
                         .HasColumnType("int");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("InterestRate")
                         .HasColumnType("decimal(18,2)");
 
@@ -47,7 +51,9 @@ namespace ModelClasses.Migrations
 
                     b.HasIndex("CustomerID1");
 
-                    b.ToTable("CheckingAccounts");
+                    b.ToTable("Account");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Account");
                 });
 
             modelBuilder.Entity("ModelClasses.Models.Customer", b =>
@@ -89,9 +95,6 @@ namespace ModelClasses.Migrations
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("CheckingAccountID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
@@ -100,12 +103,19 @@ namespace ModelClasses.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("CheckingAccountID");
+                    b.HasIndex("AccountID");
 
-                    b.ToTable("Transaction");
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("ModelClasses.Models.CheckingAccount", b =>
+                {
+                    b.HasBaseType("ModelClasses.Models.Account");
+
+                    b.HasDiscriminator().HasValue("CheckingAccount");
+                });
+
+            modelBuilder.Entity("ModelClasses.Models.Account", b =>
                 {
                     b.HasOne("ModelClasses.Models.Customer", null)
                         .WithMany("Accounts")
@@ -114,9 +124,11 @@ namespace ModelClasses.Migrations
 
             modelBuilder.Entity("ModelClasses.Models.Transaction", b =>
                 {
-                    b.HasOne("ModelClasses.Models.CheckingAccount", null)
+                    b.HasOne("ModelClasses.Models.Account", null)
                         .WithMany("Transactions")
-                        .HasForeignKey("CheckingAccountID");
+                        .HasForeignKey("AccountID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

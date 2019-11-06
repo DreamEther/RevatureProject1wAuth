@@ -61,21 +61,15 @@ namespace RevatureProject1wAuth.Controllers
         public async Task<IActionResult> Create()
         {
 
-            CheckingAccount checking = new CheckingAccount()
-            {
-
-                CustomerID = User.Identity.GetUserId(),
-                AccountType = "Checking",
-                InterestRate = 5
-                //CustomerID = listOfUsers.Users.Where(x => x.Id == 
-            };
+            CheckingAccount checking = new CheckingAccount();
+            checking.CustomerID = User.Identity.GetUserId();     
             //List<CheckingAccount> list = new List<CheckingAccount>();
             //var currentCustomer = listOfUsers.Users.Where(x => x.Id == checking.CustomerID);
             //var currentCustomer = CustomerController.customers.FirstOrDefault(x => x.UserID == User.Identity.GetUserId());
             //currentCustomer.Accounts.Add(checking);
-                _context.Add(checking);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            _context.Add(checking);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
         [HttpGet]
         public IActionResult Deposit()
@@ -87,14 +81,54 @@ namespace RevatureProject1wAuth.Controllers
         public async Task<IActionResult> Deposit(int id, Deposit deposit)
         {
                 var getAccount = _context.CheckingAccounts.FirstOrDefault(x => x.ID == id);
-                getAccount.Balance += deposit.DepositAmount;
+            if (deposit.DepositAmount <= 0)
+            {
+                ViewBag.Error = "Amount must be greaters than 0";
+                return View();
+            }
+            getAccount.Balance += deposit.DepositAmount;
+            decimal newBalance = getAccount.Balance;
+            decimal newDeposit = deposit.DepositAmount;
+            Transaction newTransaction = new Transaction(id, newBalance, newDeposit, DateTime.Now);          
                     _context.Update(getAccount);
+                    _context.Add(newTransaction); 
                     await _context.SaveChangesAsync();
                  
             
           //  account.Balance += checkingAccount.Balance;
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public IActionResult Withdraw()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Withdraw(int id, Withdraw withdraw)
+        {
+            var getAccount = _context.CheckingAccounts.FirstOrDefault(x => x.ID == id);
+            getAccount.Balance -= withdraw.WithdrawalAmount;
+            decimal newBalance = getAccount.Balance;
+            decimal newDeposit = withdraw.WithdrawalAmount;
+            Transaction newTransaction = new Transaction(id, newBalance, newDeposit, DateTime.Now);
+            _context.Update(getAccount);
+            _context.Add(newTransaction);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult ListOfTransactions(int id)
+        {
+            var getTransactions = _context.Transactions.Where(x => x.AccountID == id).ToList();
+
+            return View(getTransactions);
+
+        }
+
+
         // GET: CheckingAccount/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {

@@ -22,7 +22,7 @@ namespace ModelClasses.Models
 
         public string UserID { get; set; }
 
-        public List<CheckingAccount> Accounts { get; set; }
+        public List<Account> Accounts { get; set; }
      
        
 
