@@ -26,6 +26,9 @@ namespace ModelClasses.Models
 
     public DbSet<CheckingAccount> CheckingAccounts { get; set; }
 
+    public DbSet<BusinessAccount> BusinessAccounts { get; set; }
+
+    public DbSet<Account> Accounts { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     }
 }

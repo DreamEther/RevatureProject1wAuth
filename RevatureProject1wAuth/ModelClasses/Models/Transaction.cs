@@ -10,22 +10,25 @@ namespace ModelClasses.Models
         public int ID { get; set; }
         [ForeignKey("AccountID")]
         public int AccountID { get; set; }
-        public decimal TransactionAmount { get; set; }
+        public string TransactionAmount { get; set; }
 
         public DateTime DateTime { get; set; }
 
         public decimal Balance { get; set; }
 
+        public string Description { get; set; }
+
         public Transaction() //why do i need this???
         {
 
         }
-        public Transaction(int id, decimal balance, decimal transactionAmount, DateTime dateTime)
+        public Transaction(int id, decimal balance, string transactionAmount, DateTime dateTime, string action)
         {
             AccountID = id;
             Balance = balance;
             TransactionAmount = transactionAmount;
             DateTime = dateTime;
+            Description = action;
         }
 
     }

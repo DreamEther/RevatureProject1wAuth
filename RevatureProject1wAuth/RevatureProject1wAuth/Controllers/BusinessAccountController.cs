@@ -3,35 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ModelClasses.Models;
 using ModelClasses.View_Models;
-using RevatureProject1wAuth.Data;
 
 namespace RevatureProject1wAuth.Controllers
 {
-    public class CheckingAccountController : Controller
+    public class BusinessAccountController : Controller
     {
         private readonly MyDbContext _context;
-        ApplicationDbContext listOfUsers = new ApplicationDbContext();
 
-        public CheckingAccountController(MyDbContext context)
+        public BusinessAccountController(MyDbContext context)
         {
             _context = context;
         }
 
-        // GET: CheckingAccount
-        public async Task<IActionResult> Index(int id)
+        // GET: BusinessAccount
+        public async Task<IActionResult> Index()
         {
-            var list = _context.CheckingAccounts.Where(x => x.CustomerID == User.Identity.GetUserId());
-           
-            return View(await list.ToListAsync());
+            return View(await _context.BusinessAccounts.ToListAsync());
         }
 
-        // GET: CheckingAccount/Details/5
+        // GET: BusinessAccount/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -39,41 +34,45 @@ namespace RevatureProject1wAuth.Controllers
                 return NotFound();
             }
 
-            var checkingAccount = await _context.CheckingAccounts
+            var businessAccount = await _context.BusinessAccounts
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (checkingAccount == null)
+            if (businessAccount == null)
             {
                 return NotFound();
             }
 
-            return View(checkingAccount);
+            return View(businessAccount);
         }
 
-        // GET: CheckingAccount/Create
-      
-
-        // POST: CheckingAccount/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            CheckingAccount checking = new CheckingAccount();
-            checking.CustomerID = User.Identity.GetUserId();     
-            _context.Add(checking);
+
+            BusinessAccount businessAccount = new BusinessAccount();
+            businessAccount.CustomerID = User.Identity.GetUserId();
+            //List<CheckingAccount> list = new List<CheckingAccount>();
+            //var currentCustomer = listOfUsers.Users.Where(x => x.Id == checking.CustomerID);
+            //var currentCustomer = CustomerController.customers.FirstOrDefault(x => x.UserID == User.Identity.GetUserId());
+            //currentCustomer.Accounts.Add(checking);
+            _context.Add(businessAccount);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
         //[HttpGet]
         //public IActionResult Deposit()
         //{
-            
+
         //    return View();
         //}
         //[HttpPost]
         //public async Task<IActionResult> Deposit(int id, Deposit deposit)
         //{
-        //    var getAccount = _context.CheckingAccounts.FirstOrDefault(x => x.ID == id);
+        //    var getAccount = _context.BusinessAccounts.FirstOrDefault(x => x.ID == id);
+        //    if (deposit.DepositAmount <= 0)
+        //    {
+        //        ViewBag.Error = "Amount must be greaters than 0";
+        //        return View();
+        //    }
         //    getAccount.Balance += deposit.DepositAmount;
         //    decimal newBalance = getAccount.Balance;
         //    decimal newDeposit = deposit.DepositAmount;
@@ -89,37 +88,26 @@ namespace RevatureProject1wAuth.Controllers
         //    return RedirectToAction(nameof(Index));
         //}
 
-        [HttpGet]
-        public IActionResult MakeATransfer()
-        {
-            var accounts = _context.Accounts.ToList();
-           // Transfer transfer = new Transfer();
-           Transfer transfer = new Transfer { accounts = accounts };
-           // transfer.accounts.AddRange(accounts);
-            return View("MakeATransfer", transfer);
-        }
-
-        [HttpPost]
         public IActionResult Transfer(int id)
         {
-          
-            return View();
+            return View("MakeATransfer");
         }
-        [HttpGet]
-        public IActionResult Withdraw()
-        {
-            return View();
-        }
+        //[HttpGet]
+        //public IActionResult Withdraw()
+        //{
+        //    return View();
+        //}
 
         //[HttpPost]
         //public async Task<IActionResult> Withdraw(int id, Withdraw withdraw)
         //{
-        //    var getAccount = _context.CheckingAccounts.FirstOrDefault(x => x.ID == id);
+        //    var getAccount = _context.BusinessAccounts.FirstOrDefault(x => x.ID == id);
         //    getAccount.Balance -= withdraw.WithdrawalAmount;
         //    decimal newBalance = getAccount.Balance;
-        //    if (getAccount.Balance <= 0)
+        //    if (newBalance < 0)
         //    {
-        //        ViewBag.Error = "Cannot withdraw more than is in your account";
+        //        newBalance += (newBalance * getAccount.InterestRate) / 100;
+        //        ViewBag.Message = "Since your balance has fallen below 0, an overdraft fee will be applied to your balance";
         //        return View();
         //    }
         //    decimal newWithdrawal = withdraw.WithdrawalAmount;
@@ -132,6 +120,8 @@ namespace RevatureProject1wAuth.Controllers
         //    return RedirectToAction(nameof(Index));
         //}
 
+     
+      
         //[HttpGet]
         //public IActionResult ListOfTransactions(int id)
         //{
@@ -141,8 +131,7 @@ namespace RevatureProject1wAuth.Controllers
 
         //}
 
-
-        // GET: CheckingAccount/Edit/5
+        // GET: BusinessAccount/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -150,22 +139,22 @@ namespace RevatureProject1wAuth.Controllers
                 return NotFound();
             }
 
-            var checkingAccount = await _context.CheckingAccounts.FindAsync(id);
-            if (checkingAccount == null)
+            var businessAccount = await _context.BusinessAccounts.FindAsync(id);
+            if (businessAccount == null)
             {
                 return NotFound();
             }
-            return View(checkingAccount);
+            return View(businessAccount);
         }
 
-        // POST: CheckingAccount/Edit/5
+        // POST: BusinessAccount/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AccountType,CustomerID,ID,Balance")] CheckingAccount checkingAccount)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,AccountType,CustomerID,Balance,InterestRate")] BusinessAccount businessAccount)
         {
-            if (id != checkingAccount.ID)
+            if (id != businessAccount.ID)
             {
                 return NotFound();
             }
@@ -174,12 +163,12 @@ namespace RevatureProject1wAuth.Controllers
             {
                 try
                 {
-                    _context.Update(checkingAccount);
+                    _context.Update(businessAccount);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CheckingAccountExists(checkingAccount.ID))
+                    if (!BusinessAccountExists(businessAccount.ID))
                     {
                         return NotFound();
                     }
@@ -190,10 +179,10 @@ namespace RevatureProject1wAuth.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(checkingAccount);
+            return View(businessAccount);
         }
 
-        // GET: CheckingAccount/Delete/5
+        // GET: BusinessAccount/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -201,30 +190,30 @@ namespace RevatureProject1wAuth.Controllers
                 return NotFound();
             }
 
-            var checkingAccount = await _context.CheckingAccounts
+            var businessAccount = await _context.BusinessAccounts
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (checkingAccount == null)
+            if (businessAccount == null)
             {
                 return NotFound();
             }
 
-            return View(checkingAccount);
+            return View(businessAccount);
         }
 
-        // POST: CheckingAccount/Delete/5
+        // POST: BusinessAccount/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var checkingAccount = await _context.CheckingAccounts.FindAsync(id);
-            _context.CheckingAccounts.Remove(checkingAccount);
+            var businessAccount = await _context.BusinessAccounts.FindAsync(id);
+            _context.BusinessAccounts.Remove(businessAccount);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CheckingAccountExists(int id)
+        private bool BusinessAccountExists(int id)
         {
-            return _context.CheckingAccounts.Any(e => e.ID == id);
+            return _context.BusinessAccounts.Any(e => e.ID == id);
         }
     }
 }

@@ -1,0 +1,66 @@
+﻿@model IEnumerable<ModelClasses.Models.Account>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<h2>
+    @ViewBag.WithdrawalError
+</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Balance)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InterestRate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Balance)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InterestRate)
+            </td>
+            <td>             
+                    <a asp-action="Deposit" asp-controller="Account" asp-route-id="@item.ID">Make a Deposit |</a>
+                    <a asp-action="Withdraw" asp-controller="Account" asp-route-id="@item.ID">Make a Withdraw | </a>
+                    <a asp-action="MakeATransfer" asp-controller="CheckingAccount" asp-route-id="@item.ID">Make a Transfer | </a>
+                    <a asp-action="ListOfTransactions" asp-controller="Account" asp-route-id="@item.ID">List of Transactions</a>
+
+                
+                @*@if (item.AccountType == "Business")
+                {
+                    <a asp-action="Deposit" asp-controller="Account" asp-route-id="@item.ID">Make a Deposit |</a>
+                    <a asp-action="Withdraw" asp-controller="BusinessAccount" asp-route-id="@item.ID">Make a Withdraw |</a>
+                    <a asp-action="Transfer" asp-controller="BusinessAccount" asp-route-id="@item.ID">Make a Transfer |</a>
+                    <a asp-action="ListOfTransactions" asp-controller="BusinessAccount" asp-route-id="@item.ID">List of Transactions</a>
+
+                }*@
+                @*<a asp-action="Deposit" asp-route-id="@item.ID">Make a Deposit</a> |
+        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+        <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>*@
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

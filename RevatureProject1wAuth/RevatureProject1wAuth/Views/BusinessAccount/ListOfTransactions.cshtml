@@ -21,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Balance)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -37,7 +40,11 @@
                 @Html.DisplayFor(modelItem => item.Balance)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
                 <a asp-controller="Account" asp-action="Index" asp-route-id="@item.ID">Index</a>
+
             </td>
         </tr>
 }
