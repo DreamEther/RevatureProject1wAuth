@@ -90,8 +90,9 @@ namespace RevatureProject1wAuth.Controllers
         //}
 
         [HttpGet]
-        public IActionResult MakeATransfer()
+        public IActionResult MakeATransfer(int id)
         {
+            //var account = _context
             var accounts = _context.Accounts.ToList();
            // Transfer transfer = new Transfer();
            Transfer transfer = new Transfer { accounts = accounts };
@@ -99,12 +100,7 @@ namespace RevatureProject1wAuth.Controllers
             return View("MakeATransfer", transfer);
         }
 
-        [HttpPost]
-        public IActionResult Transfer(int id)
-        {
-          
-            return View();
-        }
+       
         [HttpGet]
         public IActionResult Withdraw()
         {

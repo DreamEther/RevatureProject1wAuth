@@ -21,8 +21,9 @@ namespace RevatureProject1wAuth.Controllers
             _repo = repo;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? message)
         {
+            ViewBag.WithdrawalError = message;
             return View(await _repo.Get());
         }
 
@@ -70,9 +71,9 @@ namespace RevatureProject1wAuth.Controllers
         {
             var getAccount = await _repo.GetAccount(id);
 
-            if (getAccount.AccountType == "Checking")
+            if (getAccount.AccountTypeAsString == "Checking")
             {
-                CheckingAccountBL checkingBL = new CheckingAccountBL();      
+                CheckingAccountBL checkingBL = new CheckingAccountBL();
                 if (withdraw.WithdrawalAmount <= 0)
                 {
                     ViewBag.WithdrawalError = "Withdrawal must be greater than zero";
@@ -92,11 +93,11 @@ namespace RevatureProject1wAuth.Controllers
                     //string appendSymbol = "+$" + withdrawalString;
                     Transaction newTransaction = new Transaction(id, getAccount.Balance, withAsString, DateTime.Now, "Withdrawal");
                     await _repo.AddTransaction(newTransaction);
-                    
-                    return RedirectToAction(nameof(Index));
+
+                    return RedirectToAction(nameof(Index), ViewBag.WithdrawalError);
                 }
             }
-            if (getAccount.AccountType == "Business")
+            if (getAccount.AccountTypeAsString == "Business")
             {
                 BusinessAccountBL busBL = new BusinessAccountBL();
                 if (withdraw.WithdrawalAmount <= 0)
@@ -126,113 +127,125 @@ namespace RevatureProject1wAuth.Controllers
                 }
             }
             return NotFound();
-
-
-           
-            // GET: Account/Details/5
-            //        public async Task<IActionResult> Details(int? id)
-            //        {
-            //            if (id == null)
-            //            {
-            //                return NotFound();
-            //            }
-
-            //            var account = await _context.Accounts
-            //                .FirstOrDefaultAsync(m => m.ID == id);
-            //            if (account == null)
-            //            {
-            //                return NotFound();
-            //            }
-
-            //            return View(account);
-            //        }
-
-
-            //        // GET: Account/Edit/5
-            //        public async Task<IActionResult> Edit(int? id)
-            //        {
-            //            if (id == null)
-            //            {
-            //                return NotFound();
-            //            }
-
-            //            var account = await _context.Accounts.FindAsync(id);
-            //            if (account == null)
-            //            {
-            //                return NotFound();
-            //            }
-            //            return View(account);
-            //        }
-
-            //        // POST: Account/Edit/5
-            //        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-            //        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-            //        [HttpPost]
-            //        [ValidateAntiForgeryToken]
-            //        public async Task<IActionResult> Edit(int id, [Bind("ID,AccountType,CustomerID,Balance,InterestRate")] Account account)
-            //        {
-            //            if (id != account.ID)
-            //            {
-            //                return NotFound();
-            //            }
-
-            //            if (ModelState.IsValid)
-            //            {
-            //                try
-            //                {
-            //                    _context.Update(account);
-            //                    await _context.SaveChangesAsync();
-            //                }
-            //                catch (DbUpdateConcurrencyException)
-            //                {
-            //                    if (!AccountExists(account.ID))
-            //                    {
-            //                        return NotFound();
-            //                    }
-            //                    else
-            //                    {
-            //                        throw;
-            //                    }
-            //                }
-            //                return RedirectToAction(nameof(Index));
-            //            }
-            //            return View(account);
-            //        }
-
-            //        // GET: Account/Delete/5
-            //        public async Task<IActionResult> Delete(int? id)
-            //        {
-            //            if (id == null)
-            //            {
-            //                return NotFound();
-            //            }
-
-            //            var account = await _context.Accounts
-            //                .FirstOrDefaultAsync(m => m.ID == id);
-            //            if (account == null)
-            //            {
-            //                return NotFound();
-            //            }
-
-            //            return View(account);
-            //        }
-
-            //        // POST: Account/Delete/5
-            //        [HttpPost, ActionName("Delete")]
-            //        [ValidateAntiForgeryToken]
-            //        public async Task<IActionResult> DeleteConfirmed(int id)
-            //        {
-            //            var account = await _context.Accounts.FindAsync(id);
-            //            _context.Accounts.Remove(account);
-            //            await _context.SaveChangesAsync();
-            //            return RedirectToAction(nameof(Index));
-            //        }
-
-            //        private bool AccountExists(int id)
-            //        {
-            //            return _context.Accounts.Any(e => e.ID == id);
-            //        }
-
         }
+
+        [HttpGet]
+        public async Task<IActionResult> MakeATransfer(int id)
+            {
+            //var account = await _repo.GetAccount(id);
+            var accounts = await _repo.Get();
+            // Transfer transfer = new Transfer();
+            Transfer transfer = new Transfer { accounts = accounts, TransferFrom = id };
+            var accountToRemove = transfer.accounts.FirstOrDefault(m => m.ID == id);
+            transfer.accounts.Remove(accountToRemove);
+            // transfer.accounts.AddRange(accounts);
+            return View("MakeATransfer", transfer);
+            }
+
+        // GET: Account/Details/5
+        //        public async Task<IActionResult> Details(int? id)
+        //        {
+        //            if (id == null)
+        //            {
+        //                return NotFound();
+        //            }
+
+        //            var account = await _context.Accounts
+        //                .FirstOrDefaultAsync(m => m.ID == id);
+        //            if (account == null)
+        //            {
+        //                return NotFound();
+        //            }
+
+        //            return View(account);
+        //        }
+
+
+        //        // GET: Account/Edit/5
+        //        public async Task<IActionResult> Edit(int? id)
+        //        {
+        //            if (id == null)
+        //            {
+        //                return NotFound();
+        //            }
+
+        //            var account = await _context.Accounts.FindAsync(id);
+        //            if (account == null)
+        //            {
+        //                return NotFound();
+        //            }
+        //            return View(account);
+        //        }
+
+        //        // POST: Account/Edit/5
+        //        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //        [HttpPost]
+        //        [ValidateAntiForgeryToken]
+        //        public async Task<IActionResult> Edit(int id, [Bind("ID,AccountType,CustomerID,Balance,InterestRate")] Account account)
+        //        {
+        //            if (id != account.ID)
+        //            {
+        //                return NotFound();
+        //            }
+
+        //            if (ModelState.IsValid)
+        //            {
+        //                try
+        //                {
+        //                    _context.Update(account);
+        //                    await _context.SaveChangesAsync();
+        //                }
+        //                catch (DbUpdateConcurrencyException)
+        //                {
+        //                    if (!AccountExists(account.ID))
+        //                    {
+        //                        return NotFound();
+        //                    }
+        //                    else
+        //                    {
+        //                        throw;
+        //                    }
+        //                }
+        //                return RedirectToAction(nameof(Index));
+        //            }
+        //            return View(account);
+        //        }
+
+        //        // GET: Account/Delete/5
+        //        public async Task<IActionResult> Delete(int? id)
+        //        {
+        //            if (id == null)
+        //            {
+        //                return NotFound();
+        //            }
+
+        //            var account = await _context.Accounts
+        //                .FirstOrDefaultAsync(m => m.ID == id);
+        //            if (account == null)
+        //            {
+        //                return NotFound();
+        //            }
+
+        //            return View(account);
+        //        }
+
+        //        // POST: Account/Delete/5
+        //        [HttpPost, ActionName("Delete")]
+        //        [ValidateAntiForgeryToken]
+        //        public async Task<IActionResult> DeleteConfirmed(int id)
+        //        {
+        //            var account = await _context.Accounts.FindAsync(id);
+        //            _context.Accounts.Remove(account);
+        //            await _context.SaveChangesAsync();
+        //            return RedirectToAction(nameof(Index));
+        //        }
+
+        //        private bool AccountExists(int id)
+        //        {
+        //            return _context.Accounts.Any(e => e.ID == id);
+        //        }
+
+    
     }
 }

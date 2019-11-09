@@ -8,9 +8,10 @@ namespace ModelClasses.Models
     {
         public Loan()
         {
-            AccountType = "Loan";
+            AccountTypeAsString = "Loan";
             Balance = 0;
-            InterestRate = 10;
+            InterestRate = 4;
+           // AccountTypesID = 3;
         }
     }
 }

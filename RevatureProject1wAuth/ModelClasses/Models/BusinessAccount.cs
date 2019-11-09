@@ -8,9 +8,11 @@ namespace ModelClasses.Models
     {
         public BusinessAccount()
         {
-            AccountType = "Business";
+            AccountTypeAsString = "Business";
             Balance = 0;
             InterestRate = 10;
+            IsClosed = false;
+           // AccountTypesID = 2;
         }
     }
 }

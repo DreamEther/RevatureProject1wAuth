@@ -5,27 +5,27 @@
 
 <body>
 
-    <form asp-controller="CheckingAccount" asp-action="MakeATransfer">
+    <form asp-controller="Account" asp-action="MakeATransfer">
         <p>
-            @Html.DisplayFor(model => model.transferFrom)
-            @*<label asp-for="AccountType" class="control-label"></label>
-            <input asp-for="" class="form-control" /> disabled*@
+            <label asp-for="TransferFrom" class="control-label"></label>
+            <input asp-for="TransferFrom" class="form-control" disabled/> 
+            <span asp-validation-for="TransferFrom" class="text-danger"></span>
+
         </p>
         <div>
         </div>
         <p>
-            @Html.DisplayFor(model => model.transferTo)
         </p>
-        @foreach (var item in Model.accounts)
-        {
-            <p>
-                @Html.DropDownListFor(m => item.ID,
-                new SelectList(Model.accounts, "ID", "ID"));
-            </p>
-        }
+        
+        <p>
+            <label asp-for="TransferTo" class="control-label"></label>
+            @Html.DropDownListFor(m => m.TransferTo,
+            new SelectList(Model.accounts, "ID", "ID"))
+        </p>
+        
         <br>
-        <label asp-for="_transferAmount" class="control-label"></label>
-        <input asp-for="_transferAmount" class="form-control" /> disabled
+        <p> Please enter the amount you wish to transfer </p>
+        <input asp-for="_transferAmount" class="form-control" /> 
         <br>
 
         <input type="submit" value="Make Transfer" class="btn btn-primary" />

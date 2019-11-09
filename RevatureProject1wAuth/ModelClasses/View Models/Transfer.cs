@@ -1,6 +1,7 @@
 ﻿using ModelClasses.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace ModelClasses.View_Models
@@ -8,8 +9,14 @@ namespace ModelClasses.View_Models
     public class Transfer
     {
         public decimal _transferAmount;
-        public string transferFrom = "Transfer From:";
-        public string transferTo = "Transfer To:";
+
+        [Display(Name = "Account ID you are transferring from:")]
+        public int TransferFrom { get; set; }
+
+        [Display(Name = "Account ID you are transferring to:")]
+
+        public int TransferTo { get; set; }
+
         public List<Account> accounts = new List<Account>();
         //public Transfer(Account account1, Account account2, decimal withdrawalAmount)
         //{

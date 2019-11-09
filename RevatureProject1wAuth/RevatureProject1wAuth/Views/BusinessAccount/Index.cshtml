@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.AccountType)
+                @Html.DisplayNameFor(model => model.AccountTypeAsString)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CustomerID)
@@ -31,7 +31,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.AccountType)
+                @Html.DisplayFor(modelItem => item.AccountTypeAsString)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CustomerID)

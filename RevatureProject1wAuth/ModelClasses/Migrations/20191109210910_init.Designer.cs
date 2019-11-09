@@ -10,8 +10,8 @@ using ModelClasses.Models;
 namespace ModelClasses.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20191106052539_transactions")]
-    partial class transactions
+    [Migration("20191109210910_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,8 +28,8 @@ namespace ModelClasses.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AccountType")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("AccountTypesID")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(18,2)");
@@ -37,11 +37,24 @@ namespace ModelClasses.Migrations
                     b.Property<string>("CustomerID")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CustomerID1")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsClosed")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
+                    b.HasKey("ID");
+
+                    b.ToTable("Accounts");
+
+                    b.HasDiscriminator<int>("AccountTypesID");
+                });
+
+            modelBuilder.Entity("ModelClasses.Models.AccountTypes", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AccountType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("InterestRate")
@@ -49,11 +62,7 @@ namespace ModelClasses.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("CustomerID1");
-
-                    b.ToTable("Account");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Account");
+                    b.ToTable("AccountTypes");
                 });
 
             modelBuilder.Entity("ModelClasses.Models.Customer", b =>
@@ -98,8 +107,11 @@ namespace ModelClasses.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("TransactionAmount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionAmount")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -108,18 +120,32 @@ namespace ModelClasses.Migrations
                     b.ToTable("Transactions");
                 });
 
+            modelBuilder.Entity("ModelClasses.Models.BusinessAccount", b =>
+                {
+                    b.HasBaseType("ModelClasses.Models.Account");
+
+                    b.HasDiscriminator().HasValue(2);
+                });
+
             modelBuilder.Entity("ModelClasses.Models.CheckingAccount", b =>
                 {
                     b.HasBaseType("ModelClasses.Models.Account");
 
-                    b.HasDiscriminator().HasValue("CheckingAccount");
+                    b.HasDiscriminator().HasValue(1);
                 });
 
-            modelBuilder.Entity("ModelClasses.Models.Account", b =>
+            modelBuilder.Entity("ModelClasses.Models.Loan", b =>
                 {
-                    b.HasOne("ModelClasses.Models.Customer", null)
-                        .WithMany("Accounts")
-                        .HasForeignKey("CustomerID1");
+                    b.HasBaseType("ModelClasses.Models.Account");
+
+                    b.HasDiscriminator().HasValue(3);
+                });
+
+            modelBuilder.Entity("ModelClasses.Models.TermDeposit", b =>
+                {
+                    b.HasBaseType("ModelClasses.Models.Account");
+
+                    b.HasDiscriminator().HasValue(4);
                 });
 
             modelBuilder.Entity("ModelClasses.Models.Transaction", b =>

@@ -4,7 +4,15 @@ using System.Text;
 
 namespace ModelClasses.Models
 {
-    class TermDeposit
+    public class TermDeposit : Account
     {
+        public TermDeposit()
+        {
+            AccountTypeAsString = "Term Deposit";
+            Balance = 0;
+            InterestRate = 6;
+            IsClosed = false;
+           // AccountTypesID = 4;
+        }
     }
 }

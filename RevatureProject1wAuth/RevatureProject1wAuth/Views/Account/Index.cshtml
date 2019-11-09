@@ -12,7 +12,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.AccountType)
+                @Html.DisplayNameFor(model => model.AccountTypeAsString)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CustomerID)
@@ -30,7 +30,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.AccountType)
+                @Html.DisplayFor(modelItem => item.AccountTypeAsString)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CustomerID)
@@ -44,7 +44,7 @@
             <td>             
                     <a asp-action="Deposit" asp-controller="Account" asp-route-id="@item.ID">Make a Deposit |</a>
                     <a asp-action="Withdraw" asp-controller="Account" asp-route-id="@item.ID">Make a Withdraw | </a>
-                    <a asp-action="MakeATransfer" asp-controller="CheckingAccount" asp-route-id="@item.ID">Make a Transfer | </a>
+                    <a asp-action="MakeATransfer" asp-controller="Account" asp-route-id="@item.ID">Make a Transfer | </a>
                     <a asp-action="ListOfTransactions" asp-controller="Account" asp-route-id="@item.ID">List of Transactions</a>
 
                 
