@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ModelClasses.Models;
 
 namespace ModelClasses.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191111002546_mapping interest")]
+    partial class mappinginterest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,27 +97,6 @@ namespace ModelClasses.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Customers");
-                });
-
-            modelBuilder.Entity("ModelClasses.Models.LoanTable", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AccountID")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("AmountDuePerMonth")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("MonthlyPlan")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Loans");
                 });
 
             modelBuilder.Entity("ModelClasses.Models.TermDepositTable", b =>

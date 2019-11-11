@@ -37,7 +37,7 @@ namespace RevatureProject1wAuth
                 options.UseSqlServer(
                     Configuration.GetConnectionString("MyDbContext")));
             services.AddTransient<CustomerRepo>();
-            services.AddTransient<BACARepo>();
+            services.AddTransient<IAccountRepo, AccountsRepo>();
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<Data.ApplicationDbContext>();

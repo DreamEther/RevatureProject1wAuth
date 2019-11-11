@@ -10,9 +10,9 @@ namespace ModelClasses.Models
         {
             AccountTypeAsString = "Business";
             Balance = 0;
-            InterestRate = 10;
             IsClosed = false;
-           // AccountTypesID = 2;
+
+            // AccountTypesID = 2;
         }
     }
 }

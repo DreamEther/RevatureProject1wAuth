@@ -10,7 +10,7 @@ using ModelClasses.Models;
 namespace ModelClasses.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20191109210910_init")]
+    [Migration("20191111001359_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,10 +37,15 @@ namespace ModelClasses.Migrations
                     b.Property<string>("CustomerID")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsClosed")
                         .HasColumnType("bit");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("AccountTypesID");
 
                     b.ToTable("Accounts");
 
@@ -89,6 +94,27 @@ namespace ModelClasses.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("ModelClasses.Models.TermDepositTable", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccountID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TermDeposits");
                 });
 
             modelBuilder.Entity("ModelClasses.Models.Transaction", b =>
@@ -146,6 +172,15 @@ namespace ModelClasses.Migrations
                     b.HasBaseType("ModelClasses.Models.Account");
 
                     b.HasDiscriminator().HasValue(4);
+                });
+
+            modelBuilder.Entity("ModelClasses.Models.Account", b =>
+                {
+                    b.HasOne("ModelClasses.Models.AccountTypes", "AccountType")
+                        .WithMany()
+                        .HasForeignKey("AccountTypesID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ModelClasses.Models.Transaction", b =>

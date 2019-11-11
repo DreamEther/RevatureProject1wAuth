@@ -1,0 +1,63 @@
+﻿@model ModelClasses.View_Models.SearchTransactions
+
+@{
+    ViewData["Title"] = "ListOfTransactions";
+}
+
+<h1>ListOfTransactions</h1>
+@*<div>
+    @Html.Partial("../Shared/TransactionSearch.cshtml", Model)
+</div>*@
+<form asp-controller="Account" asp-action="ListOfTransactions">
+    <div class="form-group">
+        @Html.DropDownListFor(m => m.StartDate,
+     new SelectList(Model.transactions, "DateTime", "DateTime"))
+    </div>
+    <div class="form-group">
+        @Html.DropDownListFor(m => m.EndDate,
+     new SelectList(Model.transactions, "DateTime", "DateTime"))
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Narrow Search Results" class="btn btn-primary" />
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Transaction.TransactionAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transaction.DateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transaction.Balance)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transaction.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.transactions)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TransactionAmount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Balance)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

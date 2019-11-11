@@ -1,4 +1,5 @@
 ﻿using ModelClasses.Models;
+using ModelClasses.Models.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,13 @@ namespace RevatureProject1wAuth.BusinessLayer
 {
     public class BusinessAccountBL : AccountBusinessLayer
     {
-        BusinessAccount bus = new BusinessAccount();
-        public override decimal Withdraw(decimal balance, decimal withdrawalAmount)
+
+        public override decimal Withdraw(decimal balance, decimal withdrawalAmount, decimal interest)
         {
             var newBalance = (balance -= withdrawalAmount);
             if (newBalance < 0)
             {
-                var overdraftBalance = (newBalance * bus.InterestRate) / 100;
+                var overdraftBalance = (newBalance * interest) / 100;
                 return overdraftBalance;
             }
             else

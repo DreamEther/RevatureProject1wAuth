@@ -20,6 +20,12 @@ namespace ModelClasses.Models.Repositories
             return customer; // returning the customer object
         }
 
+        public async Task<Customer> GetByUserID(Customer customers)
+        {
+            var customer = await _context.Customers.FirstOrDefaultAsync(m => m.UserID == customers.UserID);
+            return customer; // returning the customer object
+        }
+
         public async Task<List<Customer>> Get()
         {
             var customer = await _context.Customers.ToListAsync();

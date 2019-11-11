@@ -8,7 +8,7 @@ namespace ModelClasses.View_Models
 {
     public class Transfer
     {
-        public decimal _transferAmount;
+        public decimal TransferAmount { get; set; }
 
         [Display(Name = "Account ID you are transferring from:")]
         public int TransferFrom { get; set; }

@@ -38,14 +38,17 @@ namespace ModelClasses.Models
             //            .Map(m => m.MapKey("PaymentId"));
         }
 
-        public DbSet<Customer> Customers { get; set; }
+    public DbSet<Customer> Customers { get; set; }
 
-        public DbSet<AccountTypes> AccountTypes { get; set; }
-    public DbSet<CheckingAccount> CheckingAccounts { get; set; }
-
-    public DbSet<BusinessAccount> BusinessAccounts { get; set; }
+    public DbSet<AccountTypes> AccountTypes { get; set; }
 
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
+
+    public DbSet<TermDepositTable> TermDeposits{ get; set; }
+
+  
+    public DbSet<LoanTable> Loans { get; set; }
+
     }
 }

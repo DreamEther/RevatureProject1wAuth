@@ -25,9 +25,9 @@ namespace RevatureProject1wAuth.BusinessLayer
         public virtual string WithdrawalAsString(decimal amount)
         {
             string withdrawalString = amount.ToString();
-            string appendSymbol = "+$" + withdrawalString;
+            string appendSymbol = "-$" + withdrawalString;
             return appendSymbol;
         }
-        public abstract decimal Withdraw(decimal balance, decimal withdrawalAmount);
+        public abstract decimal Withdraw(decimal balance, decimal withdrawalAmount, decimal interest);
     }
 }

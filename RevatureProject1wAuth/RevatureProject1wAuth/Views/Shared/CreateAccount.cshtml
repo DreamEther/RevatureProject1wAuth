@@ -1,4 +1,5 @@
-﻿
+﻿@model ModelClasses.View_Models.ListOfAccounts
+
 @{
     ViewData["Title"] = "CreateAccount";
 }
@@ -6,16 +7,8 @@
 <h1>Account Creation:</h1>
 
 <div>
-    @Html.ActionLink("Create Checking Account", "Create", "CheckingAccount")
-</div>
-<div>
-    @Html.ActionLink("Create Business Account", "Create", "BusinessAccount")
-</div>
-
-<div>
-    @Html.ActionLink("Take out a Loan", "Create", "CheckingAccount")
-</div>
-<div>
-    @Html.ActionLink("Open a Certificate of Deposit", "Create", "CheckingAccount")
-</div>
-
+    <a asp-action="Create" asp-controller="Account" asp-route-id="1">Create Checking |</a>
+    <a asp-action="Create" asp-controller="Account" asp-route-id="2">Create Business | </a>
+    <a asp-action="Create" asp-controller="Account" asp-route-id="3">Take out a Loan | </a>
+    <a asp-action="Create" asp-controller="Account" asp-route-id="4">Open a Term Deposit</a>
+    </div>

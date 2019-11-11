@@ -3,36 +3,44 @@
     ViewData["Title"] = "MakeATransfer";
 }
 
-<body>
+@if (ViewBag.IsEnabled == true)
+{
+    @ViewBag.TransferError
 
-    <form asp-controller="Account" asp-action="MakeATransfer">
-        <p>
-            <label asp-for="TransferFrom" class="control-label"></label>
-            <input asp-for="TransferFrom" class="form-control" disabled/> 
-            <span asp-validation-for="TransferFrom" class="text-danger"></span>
+    <a asp-controller="Account" asp-action="Index">View List of Accounts</a>
+}
 
-        </p>
-        <div>
-        </div>
-        <p>
-        </p>
-        
-        <p>
-            <label asp-for="TransferTo" class="control-label"></label>
-            @Html.DropDownListFor(m => m.TransferTo,
-            new SelectList(Model.accounts, "ID", "ID"))
-        </p>
-        
-        <br>
-        <p> Please enter the amount you wish to transfer </p>
-        <input asp-for="_transferAmount" class="form-control" /> 
-        <br>
+<form asp-controller="Account" asp-action="MakeATransfer">
 
-        <input type="submit" value="Make Transfer" class="btn btn-primary" />
-    </form>
-
-    <div>
-        <a asp-action="Index">Back to List</a>
+    <div class="form-group">
+        <label asp-for="TransferFrom" class="control-label"></label>
+        <input asp-for="TransferFrom" name="TransferFrom" class="form-control" disabled />
+        <span asp-validation-for="TransferFrom" class="text-danger"></span>
     </div>
 
-</body>
+
+    <div class="form-group">
+        <label asp-for="TransferTo" name="TransferTo" class="control-label"></label>
+        @Html.DropDownListFor(m => m.TransferTo,
+        new SelectList(Model.accounts, "ID", "ID"))
+    </div>
+
+    <br>
+    <div class="form-group">
+        <p> Please enter the amount you wish to transfer </p>
+        <label asp-for="TransferAmount" name="TransferAmount" class="control-label"></label>
+        <input asp-for="TransferAmount" name="TransferAmount" class="form-control" />
+        <span asp-validation-for="TransferAmount" name="TransferAmount" class="text-danger"></span>
+
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="MakeATransfer" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+

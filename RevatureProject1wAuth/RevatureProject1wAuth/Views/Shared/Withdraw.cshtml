@@ -5,7 +5,12 @@
 }
 
 <h4>Withdraw</h4>
-@ViewBag.Message
+@if (ViewBag.IsEnabled == true)
+{
+    @ViewBag.WithdrawalError
+
+    <a asp-controller="Account" asp-action="Index">View List of Accounts</a>
+}
 <hr />
 <div class="row">
     <div class="col-md-4">

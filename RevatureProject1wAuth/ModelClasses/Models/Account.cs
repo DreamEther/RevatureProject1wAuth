@@ -15,13 +15,17 @@ namespace ModelClasses.Models
 
         public decimal Balance { get; set; }
 
+        public DateTime DateTime { get; set; }
         public bool IsClosed { get; set; }
         [Display(Name = "AccountType")]
         public int AccountTypesID { get; set; }
-        [NotMapped]
+       
+        // [NotMapped]
         public decimal InterestRate { get; set; }
         public List<Transaction> Transactions { get; set; }
 
-       // public List<AccountTypes> ListOfAccountTypes { get; set; }
+        public AccountTypes AccountType { get; set; }
+
+
     }
 }

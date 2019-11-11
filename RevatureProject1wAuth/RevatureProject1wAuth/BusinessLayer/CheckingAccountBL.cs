@@ -7,7 +7,7 @@ namespace RevatureProject1wAuth.BusinessLayer
 {
     public class CheckingAccountBL : AccountBusinessLayer
     { 
-        public override decimal Withdraw(decimal balance, decimal withdrawalAmount)
+        public override decimal Withdraw(decimal balance, decimal withdrawalAmount, decimal interest)
         {
             var newBalance = (balance -= withdrawalAmount);
             return newBalance;

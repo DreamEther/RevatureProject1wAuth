@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ModelClasses.Models;
 using ModelClasses.Models.Repositories;
+using ModelClasses.View_Models;
 
 namespace RevatureProject1wAuth.Controllers
 {

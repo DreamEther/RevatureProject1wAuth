@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace ModelClasses.Models
@@ -10,9 +11,9 @@ namespace ModelClasses.Models
         {
             AccountTypeAsString = "Term Deposit";
             Balance = 0;
-            InterestRate = 6;
             IsClosed = false;
-           // AccountTypesID = 4;
+
+            // AccountTypesID = 4;
         }
     }
 }

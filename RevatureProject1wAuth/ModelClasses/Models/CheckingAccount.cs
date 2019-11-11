@@ -14,7 +14,6 @@ namespace ModelClasses.Models
         {
             AccountTypeAsString = "Checking";
             Balance = 0;
-            InterestRate = 5;
             IsClosed = false;
             //AccountTypesID = 1;
         }
