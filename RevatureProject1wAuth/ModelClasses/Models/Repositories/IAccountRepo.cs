@@ -14,6 +14,7 @@ namespace ModelClasses.Models.Repositories
         Task<List<AccountTypes>> GetAccountTypes();
 
         Task<bool> AddToLoanTable(LoanTable loanTable);
+        Task<bool> AddToTermDepositTable(TermDepositTable termTable);
         Task<List<Account>> Get();
 
         Task<bool> Create(Account account);

@@ -17,6 +17,9 @@
                 @Html.DisplayNameFor(model => model.DateTime)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.IsClosed)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.InterestRate)
             </th>
             <th>
@@ -32,7 +35,7 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.CustomerID)
+                        @Html.DisplayFor(modelItem => item.ID)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Balance)

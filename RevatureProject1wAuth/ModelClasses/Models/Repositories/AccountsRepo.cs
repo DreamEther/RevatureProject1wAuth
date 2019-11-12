@@ -36,6 +36,13 @@ namespace ModelClasses.Models.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> AddToTermDepositTable(TermDepositTable termTable)
+        {
+            _context.TermDeposits.Add(termTable);
+            await _context.SaveChangesAsync();
+            return true;
+        }
         public async Task<List<AccountTypes>> GetAccountTypes()
         {
             var accounts = await _context.AccountTypes.ToListAsync();
@@ -71,7 +78,7 @@ namespace ModelClasses.Models.Repositories
 
         public async Task<bool> DeleteAccount(Account account)
         {
-            _context.Accounts.Remove(account);
+            _context.Accounts.Update(account);
             await _context.SaveChangesAsync();
             return true;
         }

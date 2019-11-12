@@ -7,7 +7,7 @@ namespace ModelClasses.View_Models
 {
     public class SearchTransactions
     {
-        public List<Transaction> transactions = new List<Transaction>();
+        public List<Transaction> Transactions = new List<Transaction>();
 
         public Transaction Transaction { get; set; }
         public DateTime StartDate { get; set; }

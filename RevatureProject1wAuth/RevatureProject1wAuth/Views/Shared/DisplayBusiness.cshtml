@@ -17,6 +17,9 @@
                 @Html.DisplayNameFor(model => model.DateTime)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.IsClosed)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.InterestRate)
             </th>
             <th>
@@ -30,30 +33,33 @@
         {
             @if (item.AccountTypesID == 2)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ID)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Balance)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DateTime)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.InterestRate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AccountTypeAsString)
-                    </td>
-                    <td>
-                        <a asp-action="Deposit" asp-controller="Account" asp-route-id="@item.ID">Make a Deposit |</a>
-                        <a asp-action="Withdraw" asp-controller="Account" asp-route-id="@item.ID">Make a Withdraw | </a>
-                        <a asp-action="MakeATransfer" asp-controller="Account" asp-route-id="@item.ID">Make a Transfer | </a>
-                        <a asp-action="ListOfTransactions" asp-controller="Account" asp-route-id="@item.ID">List of Transactions | </a>
-                        <a asp-action="Delete" asp-controller="Account" asp-route-id="@item.ID">Close Account</a>
-                    </td>
-                </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Balance)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsClosed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InterestRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountTypeAsString)
+            </td>
+            <td>
+                <a asp-action="Deposit" asp-controller="Account" asp-route-id="@item.ID">Make a Deposit |</a>
+                <a asp-action="Withdraw" asp-controller="Account" asp-route-id="@item.ID">Make a Withdraw | </a>
+                <a asp-action="MakeATransfer" asp-controller="Account" asp-route-id="@item.ID">Make a Transfer | </a>
+                <a asp-action="ListOfTransactions" asp-controller="Account" asp-route-id="@item.ID">List of Transactions | </a>
+                <a asp-action="Delete" asp-controller="Account" asp-route-id="@item.ID">Close Account</a>
+            </td>
+        </tr>
             }
         }
         </tbody>

@@ -2,7 +2,9 @@
 @{
     ViewData["Title"] = "MakeATransfer";
 }
-
+<h1>
+    @ViewBag.TransferError
+</h1>
 @if (ViewBag.IsEnabled == true)
 {
     @ViewBag.TransferError

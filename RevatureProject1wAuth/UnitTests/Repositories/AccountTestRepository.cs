@@ -9,6 +9,25 @@ namespace UnitTests.Repositories
 {
     public class AccountTestRepository : IAccountRepo
     {
+        private static List<Account> _accounts = new List<Account>()
+
+        {
+
+            new CheckingAccount()
+
+            {
+
+                ID = 101,
+                AccountTypeAsString = "Checking",
+                InterestRate = 5,
+                Balance = 100
+            }
+    
+    
+
+           
+
+        };
         public Task<bool> AddToLoanTable(LoanTable loanTable)
         {
             throw new NotImplementedException();

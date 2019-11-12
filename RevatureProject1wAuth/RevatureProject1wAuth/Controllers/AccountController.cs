@@ -23,9 +23,10 @@ namespace RevatureProject1wAuth.Controllers
 
         public async Task<IActionResult> Index(string? message)
         {
-         
+            var accounts = await _repo.Get();
+            var myAccounts = accounts.Where(x => x.CustomerID == User.Identity.GetUserId());
             ViewBag.WithdrawalError = message;
-            return View(await _repo.Get());
+            return View(myAccounts);
         }
      
 
@@ -34,31 +35,29 @@ namespace RevatureProject1wAuth.Controllers
         {
             var transactions = await _repo.GetTransactions(id);
             SearchTransactions searchTransactions = new SearchTransactions();
-            searchTransactions.transactions = transactions;
+            searchTransactions.Transactions = transactions;
             return View(searchTransactions);
         }
 
         [HttpPost]
-        public IActionResult ListOfTransactions(SearchTransactions model)
+        public async Task<IActionResult> ListOfTransactions(int id, SearchTransactions model)
         {
-
-            //SearchTransactions searchTransactions = new SearchTransactions();
-            List<Transaction> transactions = new List<Transaction>();
-            //searchTransactions.StartDate = model.StartDate;
-            //searchTransactions.EndDate = model.EndDate;
-            var dateOne = model.transactions.FirstOrDefault(x => x.DateTime == model.StartDate);
-            var startDate = model.transactions.IndexOf(dateOne);
-            var dateTwo = model.transactions.FirstOrDefault(x => x.DateTime == model.EndDate);
-            var endDate = model.transactions.IndexOf(dateTwo);
-            
-            
-            for(int i = startDate; i < endDate; i++)
+            if (model.StartDate > model.EndDate)
             {
-                var transaction = model.transactions.ElementAt(i);
-                transactions.Add(transaction);              
+                return NotFound();
             }
-            return View("TransactionSearch", transactions);
-           // return View(searchTransactions.transactions);
+            var transactions = await _repo.GetTransactions(id);
+            List<Transaction> narrowedList = new List<Transaction>();
+
+           for(int i = 0; i < transactions.Count - 1; i++) // needed the -1 to account for list index. Otherwise list is empty
+            {
+                if(transactions[i].DateTime >= model.StartDate && transactions[i].DateTime <= model.EndDate)
+                {     
+                        narrowedList.Add(transactions[i]);
+                }
+            }
+        
+            return View("TransactionSearch", narrowedList);
         }
         [HttpGet]
         public IActionResult CreateAccount()
@@ -150,6 +149,8 @@ namespace RevatureProject1wAuth.Controllers
                 var accounts = await _repo.Get();
                 var newCD = accounts.Last();
                 termDepositTable.AccountID = newCD.ID;
+                await _repo.AddToTermDepositTable(termDepositTable);
+
                 return RedirectToAction(nameof(Index));
 
 
@@ -184,8 +185,9 @@ namespace RevatureProject1wAuth.Controllers
                     AccountType = loanAccountMaster,
                     CustomerID = User.Identity.GetUserId()
                 };
-                loan.Balance += model.LoanAmount;
                 loan.InterestRate = loanAccountMaster.InterestRate;
+                var interest = (model.LoanAmount * loanAccountMaster.InterestRate) / 100;
+                loan.Balance = model.LoanAmount + interest;
                 await _repo.Create(loan);
                 var accounts = await _repo.Get();
                 var newLoan = accounts.Last();
@@ -211,6 +213,15 @@ namespace RevatureProject1wAuth.Controllers
             {
                 ViewBag.DepositError = "Deposit must be greater than zero";
                 return View();
+            }
+            if (getAccount.AccountTypeAsString == "Loan")
+            {
+                getAccount.Balance -= deposit.DepositAmount;
+                string depositString = deposit.DepositAmount.ToString();
+                string appendSymbol = "+$" + depositString;
+                Transaction newTransaction = new Transaction(id, getAccount.Balance, appendSymbol, DateTime.Now, "Loan Payment");
+                await _repo.AddTransaction(newTransaction);
+                return RedirectToAction(nameof(Index));
             }
             else
             {
@@ -328,13 +339,30 @@ namespace RevatureProject1wAuth.Controllers
         public async Task<IActionResult> MakeATransfer(int id, Transfer transfer)
         {
             var accountFrom = await _repo.GetAccount(id);
+            
             var accountTo = await _repo.GetAccount(transfer.TransferTo);
+            if (accountTo == null)
+            {
+                return NotFound();
+            }
             var accountFromBalance = accountFrom.Balance - transfer.TransferAmount;
             if(accountFromBalance < 0)
             {
                 ViewBag.TransferError = "You do not have enough funds to make this transfer";
-                ViewBag.IsEnabled = true;
-                return View();
+                //ViewBag.IsEnabled = true;
+                var accounts = await _repo.Get();
+                var checkingAccounts = accounts.Where(x => x.AccountTypesID == 1).ToList();
+                var businessAccounts = accounts.Where(x => x.AccountTypesID == 2).ToList();
+                var loanAccounts = accounts.Where(x => x.AccountTypesID == 3).ToList();
+                List<Account> eligibleAccounts = new List<Account>();
+                eligibleAccounts.AddRange(checkingAccounts);
+                eligibleAccounts.AddRange(businessAccounts);
+                eligibleAccounts.AddRange(loanAccounts);
+                Transfer transfers = new Transfer { accounts = eligibleAccounts, TransferFrom = id };
+                var accountToRemove = transfer.accounts.FirstOrDefault(m => m.ID == id);
+                transfer.accounts.Remove(accountToRemove);
+
+                return View(transfers);
             }
             else 
             {
@@ -342,12 +370,25 @@ namespace RevatureProject1wAuth.Controllers
                 accountFrom.Balance = accountFrom.Balance - transfer.TransferAmount;
                 var withAsString = checkingBL.WithdrawalAsString(transfer.TransferAmount); // need to change
                 Transaction transferFromTransaction = new Transaction(id, accountFrom.Balance, withAsString, DateTime.Now, "Transfer");
-                accountTo.Balance = accountTo.Balance + transfer.TransferAmount;
-                var depAsString = checkingBL.DepositAsString(transfer.TransferAmount); // need to change
-                Transaction TransferToTransaction = new Transaction(id, accountFrom.Balance, withAsString, DateTime.Now, "Transfer");
-                await _repo.AddTransaction(transferFromTransaction);
-                await _repo.AddTransaction(TransferToTransaction);
-                return RedirectToAction(nameof(Index));
+                if(accountTo.AccountTypeAsString == "Loan")
+                {
+                    accountTo.Balance = accountTo.Balance - transfer.TransferAmount;
+                    var depAsString = checkingBL.DepositAsString(transfer.TransferAmount); // need to change
+                    Transaction TransferToTransaction = new Transaction(id, accountFrom.Balance, withAsString, DateTime.Now, "Transfer");
+                    await _repo.AddTransaction(transferFromTransaction);
+                    await _repo.AddTransaction(TransferToTransaction);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    accountTo.Balance = accountTo.Balance + transfer.TransferAmount;
+                    var depAsString = checkingBL.DepositAsString(transfer.TransferAmount); // need to change
+                    Transaction TransferToTransaction = new Transaction(id, accountFrom.Balance, withAsString, DateTime.Now, "Transfer");
+                    await _repo.AddTransaction(transferFromTransaction);
+                    await _repo.AddTransaction(TransferToTransaction);
+                    return RedirectToAction(nameof(Index));
+                }
+          
 
             }
         }
@@ -376,6 +417,7 @@ namespace RevatureProject1wAuth.Controllers
                 ViewBag.Error = "You cannot close an account that still has money in it.";
                 return View();
             }
+            account.IsClosed = true;
             await _repo.DeleteAccount(account);
             return RedirectToAction(nameof(Index));
         }

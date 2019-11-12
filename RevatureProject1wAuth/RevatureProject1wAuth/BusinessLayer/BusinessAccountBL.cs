@@ -15,8 +15,9 @@ namespace RevatureProject1wAuth.BusinessLayer
             var newBalance = (balance -= withdrawalAmount);
             if (newBalance < 0)
             {
-                var overdraftBalance = (newBalance * interest) / 100;
-                return overdraftBalance;
+                var overdraftBalance = (withdrawalAmount * interest) / 100;
+                var newTotal = balance - overdraftBalance;
+                return newTotal;
             }
             else
             {

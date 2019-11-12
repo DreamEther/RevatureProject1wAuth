@@ -16,6 +16,9 @@
                 @Html.DisplayNameFor(model => model.DateTime)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.IsClosed)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.InterestRate)
             </th>
             <th>
@@ -29,27 +32,30 @@
         {
             @if (item.AccountTypesID == 3)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ID)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Balance)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DateTime)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.InterestRate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AccountTypeAsString)
-                    </td>
-                    <td>
-                        <a asp-action="Deposit" asp-controller="Account" asp-route-id="@item.ID">Make a Payment |</a>
-                        <a asp-action="ListOfTransactions" asp-controller="Account" asp-route-id="@item.ID">Payment History</a>
-                    </td>
-                </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Balance)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsClosed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InterestRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountTypeAsString)
+            </td>
+            <td>
+                <a asp-action="Deposit" asp-controller="Account" asp-route-id="@item.ID">Make a Payment |</a>
+                <a asp-action="ListOfTransactions" asp-controller="Account" asp-route-id="@item.ID">Payment History</a>
+            </td>
+        </tr>
             }
         }
         </tbody>
